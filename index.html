@@ -23,8 +23,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    
-
     <main class="max-w-7xl mx-auto px-4 py-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
         
         <!-- LEFT COLUMN: Grid & Brush Controls -->
@@ -40,20 +38,23 @@
 
                 <!-- Brush Selection Tool -->
                 <div class="mb-6">
-                    <!-- <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Active Zoning Brush:</label> -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-1">
                         <button onclick="setBrush('residential')" id="btn-residential" class="brush-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-amber-400 bg-amber-50 text-amber-900 font-medium text-xs transition">
                             <span class="w-4 h-4 rounded-md bg-amber-300 inline-block"></span> Nhà ở
                         </button>
                         <button onclick="setBrush('commercial')" id="btn-commercial" class="brush-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-slate-100 text-slate-700 font-medium text-xs transition hover:bg-slate-200">
-                            <span class="w-4 h-4 rounded-md bg-orange-400 inline-block"></span> Thương mại/dịch vụ
+                            <span class="w-4 h-4 rounded-md bg-blue-400  inline-block"></span> Tiện ích công
                         </button>
                         <button onclick="setBrush('green')" id="btn-green" class="brush-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-slate-100 text-slate-700 font-medium text-xs transition hover:bg-slate-200">
                             <span class="w-4 h-4 rounded-md bg-emerald-400 inline-block"></span> Cây xanh/công viên
                         </button>
                         <button onclick="setBrush('industrial')" id="btn-industrial" class="brush-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-slate-100 text-slate-700 font-medium text-xs transition hover:bg-slate-200">
-                            <span class="w-4 h-4 rounded-md bg-blue-400 inline-block"></span> Tiện ích công
+                            <span class="w-4 h-4  rounded-md bg-orange-400 inline-block"></span> Khu công nghiệp
                         </button>
+                        <button onclick="setBrush('none')" id="btn-none" class="brush-btn flex items-center gap-2 p-2.5 rounded-xl border-2 border-transparent bg-slate-100 text-slate-700 font-medium text-xs transition hover:bg-slate-200">
+                            <span class="w-4 h-4  rounded-md bg-slate-400 inline-block"></span> Bỏ QH
+                        </button>
+                        
                     </div>
                 </div>
 
@@ -66,24 +67,30 @@
             </div>
 
             <!-- Land Composition Stats -->
-            <div class="mt-6 pt-4 border-t border-slate-100 grid grid-cols-4 gap-2 text-center text-xs">
+            <div class="mt-6 pt-4 border-t border-slate-100 grid grid-cols-5 gap-1 text-center text-xs">
                 <div class="bg-amber-50 p-2 rounded-xl border border-amber-200">
-                    <div class="text-amber-800 font-bold text-sm" id="count-res">12</div>
+                    <div class="text-amber-800 font-bold text-sm" id="count-res">10</div>
                     <div class="text-amber-600 font-medium">Nhà ở</div>
                 </div>
-                <div class="bg-orange-50 p-2 rounded-xl border border-orange-200">
-                    <div class="text-orange-800 font-bold text-sm" id="count-com">5</div>
-                    <div class="text-orange-600 font-medium">Thương mại</div>
+                <div class="bg-blue-50 p-2 rounded-xl border border-blue-200">
+                    <div class="text-blue-800 font-bold text-sm" id="count-pub">5</div>
+                    <div class="text-blue-600 font-medium">Tiện ích công</div>
                 </div>
                 <div class="bg-emerald-50 p-2 rounded-xl border border-emerald-200">
                     <div class="text-emerald-800 font-bold text-sm" id="count-grn">5</div>
                     <div class="text-emerald-600 font-medium">Công viên/cây xanh</div>
                 </div>
-                <div class="bg-blue-50 p-2 rounded-xl border border-blue-200">
-                    <div class="text-blue-800 font-bold text-sm" id="count-ind">3</div>
-                    <div class="text-blue-600 font-medium">Tiện ích công cộng</div>
+                <div class="bg-orange-50 p-2 rounded-xl border border-orange-200 ">
+                    <div class="text-orange-800 font-bold text-sm" id="count-ind">5</div>
+                    <div class="text-orange-600 font-medium">Khu công nghiệp</div>
+                </div>
+
+                <div class="bg-slate-50 p-2 rounded-xl border border-orange-200 ">
+                    <div class="text-slate-800 font-bold text-sm" id="count-none">0</div>
+                    <div class="text-slate-600 font-medium">Khu đất trống</div>
                 </div>
             </div>
+
         </section>
 
         <!-- RIGHT COLUMN: Dynamic Market Curves & Indicators -->
@@ -93,61 +100,73 @@
                     <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
                         <i class="fa-solid fa-chart-line text-indigo-600"></i> Thị trường nhà ở
                     </h2>
-                    <span id="market-status-badge" class="text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-semibold">Moderate Price Impact</span>
+                    <span id="market-status-badge" class="text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-semibold"></span>
                 </div>
-                
 
                 <!-- SVG Canvas for Supply & Demand Curves -->
                 <div class="relative w-full bg-slate-900 rounded-2xl p-4 shadow-inner flex flex-col items-center">
-                    <svg id="market-canvas" viewBox="0 0 400 260" class="w-full h-auto max-h-[240px]">
+                    <svg id="market-canvas" viewBox="-20 -20 500 350" class="w-full h-auto max-h-[240px]">
                         <!-- Grid lines -->
                         <g stroke="#334155" stroke-width="0.5" stroke-dasharray="3,3">
-                            <line x1="50" y1="50" x2="370" y2="50" />
-                            <line x1="50" y1="100" x2="370" y2="100" />
-                            <line x1="50" y1="150" x2="370" y2="150" />
-                            <line x1="50" y1="200" x2="370" y2="200" />
-                            <line x1="130" y1="20" x2="130" y2="220" />
-                            <line x1="210" y1="20" x2="210" y2="220" />
-                            <line x1="290" y1="20" x2="290" y2="220" />
+                            <line x1="50" y1="-20" x2="50" y2="300" />
+                            <line x1="100" y1="-20" x2="100" y2="300" />
+                            <line x1="150" y1="-20" x2="150" y2="300" />
+                            <line x1="200" y1="-20" x2="200" y2="300" />
+                            <line x1="250" y1="-20" x2="250" y2="300" />
+                            <line x1="300" y1="-20" x2="300" y2="300" />
+                            <line x1="350" y1="-20" x2="350" y2="300" />
+                            <line x1="400" y1="-20" x2="400" y2="300" />
+                            <!-- 
+                            <line x1="400" y1="-20" x2="400" y2="300" />
+                            <line x1="450" y1="-20" x2="450" y2="300" />
+                            <line x1="100" y1="0" x2="370" y2="150" />
+                            <line x1="150" y1="0" x2="370" y2="200" />
+                            <line x1="200" y1="20" x2="130" y2="220" />
+                            <line x1="250" y1="20" x2="210" y2="220" />
+                            <line x1="300" y1="20" x2="290" y2="220" />
+                        -->
                         </g>
 
                         <!-- Axes -->
                         <g stroke="#94a3b8" stroke-width="1.5">
-                            <line x1="50" y1="220" x2="380" y2="220" />
-                            <line x1="50" y1="220" x2="50" y2="20" />
+                            <!-- vertical axist-->
+                            <line x1="0" y1="-10" x2="0" y2="300" />
+                            <!-- horizontal axis -->
+                            <line x1="0" y1="300" x2="420" y2="300" />
                         </g>
 
                         <!-- Axis Labels -->
-                        <text x="400" y="250" fill="#94a3b8" font-size="12" font-family="Inter">Q</text>
-                        <text x="20" y="20" fill="#94a3b8" font-size="10" font-family="Inter">P</text>
+                        <text x="410" y="320" fill="#94a3b8" font-size="15" font-family="Inter">Q</text>
+                        <text x="-15" y="-5" fill="#94a3b8" font-size="15" font-family="Inter">P</text>
 
                         <!-- Original Curves (Faded) -->
-                        <line x1="50" y1="50" x2="350" y2="225" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" />
-                        <line x1="50" y1="225" x2="350" y2="50" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" />
+                        <line x1="0" y1="0" x2="400" y2="300" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" />
+                        <line x1="0" y1="300" x2="400" y2="0" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" />
+                        <circle  cx="200" cy="150" r="6" fill="#64748b" />
+
 
                         <!-- Dynamic Curves -->
                         <!-- Demand Curve (D) -->
-                        <line id="curve-demand" x1="50" y1="50" x2="350" y2="225"  stroke="#f87171" stroke-width="2.5" />
+                        <line id="curve-demand" x1="0" y1="0" x2="400" y2="300" stroke="#f87171" stroke-width="2.5" />
+                        
                         <!-- Supply Curve (S) -->
-                        <line id="curve-supply" x1="50" y1="225" x2="350" y2="50"  stroke="#38bdf8" stroke-width="2.5" />
+                        <line id="curve-supply" x1="0" y1="300" x2="400" y2="0" stroke="#38bdf8" stroke-width="2.5" />
 
-                        <!-- Equilibrium Point Original -->
-                        <circle id="eq-orig" cx="200" cy="138" r="4" fill="#94a3b8" />
                         <!-- Equilibrium Point New -->
-                        <circle id="eq-new" cx="200" cy="138" r="6" fill="#fbbf24" />
+                        <circle id="eq-new" cx="200" cy="150" r="6" fill="#fbbf24" />
                         
                         <!-- Intercept dashed lines for new equilibrium -->
-                        <line id="line-p-new" x1="0" y1="50" x2="400" y2="125" stroke="#fbbf24" stroke-width="1" stroke-dasharray="2,2" />
-                        <line id="line-q-new" x1="0" y1="0" x2="400" y2="125" stroke="#fbbf24" stroke-width="1" stroke-dasharray="2,2" />
+                        <line id="line-p-new" x1="0" y1="150" x2="200" y2="150" stroke="#fbbf24" stroke-width="1" stroke-dasharray="2,2" />
+                        <line id="line-q-new" x1="200" y1="150" x2="200" y2="300" stroke="#fbbf24" stroke-width="1" stroke-dasharray="2,2" />
 
                         <!-- Labels for Curves -->
-                        <text id="label-s" x="315" y="180" fill="#f87171" font-size="11" font-weight="bold">D</text>
-                        <text id="label-d" x="315" y="60" fill="#38bdf8" font-size="11" font-weight="bold">S</text>
+                        <text id="label-d" x="375" y="40"   fill="#38bdf8" font-size="15" font-weight="bold">S</text>
+                        <text id="label-s" x="375" y="260" fill="#f87171" font-size="15" font-weight="bold">D</text>
                     </svg>
                     <div class="flex items-center gap-6 mt-3 text-xs text-slate-300">
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-1 bg-slate-400 dashed inline-block"></span> Cung cầu (trước thay đổi QH)</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-1 bg-red-400 inline-block"></span> Cung </span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-1 bg-sky-400 inline-block"></span> Cầu </span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-1 bg-slate-400 dashed inline-block"></span> Cung cầu gốc</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-1 bg-red-400 inline-block"></span> Cầu (D)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-1 bg-sky-400 inline-block"></span> Cung (S)</span>
                     </div>
                 </div>
             </div>
@@ -156,11 +175,11 @@
             <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div class="text-xs text-slate-500 font-large">P&#8320;</div>
-                    <div class="text-lg font-bold text-slate-700 mt-0.5" id="val-p1">100tr VND/m2</div>
+                    <div class="text-lg font-bold text-slate-700 mt-0.5" id="val-p1">$200.0</div>
                 </div>
                 <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
                     <div class="text-xs text-indigo-600 font-large">P&#8321;</div>
-                    <div class="text-lg font-bold text-indigo-900 mt-0.5" id="val-p2">100tr VND/m2</div>
+                    <div class="text-lg font-bold text-indigo-900 mt-0.5" id="val-p2">$200.0</div>
                 </div>
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div class="text-xs text-slate-500 font-large">Thay đổi giá</div>
@@ -176,28 +195,26 @@
     </main>
 
     <script>
-        // Grid configuration and state
         const GRID_SIZE = 5;
         let activeBrush = 'residential';
         
-        // Initial grid layout (25 cells)
-        // 0: residential, 1: commercial, 2: green, 3: industrial
         let gridData = [
             0, 0, 1, 1, 2,
             0, 2, 2, 1, 1,
             3, 0, 0, 0, 2,
             3, 3, 0, 0, 2,
-            0, 0, 1, 3, 2
+            0, 0, 1, 3, 3
         ];
 
         const colorMap = {
             'residential': { code: '#fde68a', bgClass: 'bg-amber-200', text: 'Residential', id: 0 },
-            'commercial': { code: '#fb923c', bgClass: 'bg-orange-400', text: 'Commercial', id: 1 },
+            'public': { code: '#fb923c', bgClass: 'bg-blue-400', text: 'Public', id: 3 },
             'green': { code: '#34d399', bgClass: 'bg-emerald-400', text: 'Green Space', id: 2 },
-            'industrial': { code: '#60a5fa', bgClass: 'bg-blue-400', text: 'Public/Ind', id: 3 }
+            'industrial': { code: '#60a5fa', bgClass: 'bg-orange-400', text: 'Industrial', id: 1 },
+            'none': { code: '#60a5fa', bgClass: 'bg-slate-400', text: 'None', id: 99 }
         };
 
-        const idToType = { 0: 'residential', 1: 'commercial', 2: 'green', 3: 'industrial' };
+        const idToType = { 0: 'residential', 3: 'public', 2 : 'green', 1: 'industrial' , 99: 'none'};
 
         function initGrid() {
             const container = document.getElementById('urban-grid');
@@ -210,7 +227,6 @@
                 cell.dataset.index = index;
                 cell.innerHTML = `<i class="fa-solid ${getIcon(typeKey)} opacity-60"></i>`;
                 
-                // Click and drag support
                 cell.addEventListener('mousedown', () => paintCell(index));
                 cell.addEventListener('mouseenter', (e) => {
                     if (e.buttons === 1) paintCell(index);
@@ -222,11 +238,12 @@
         }
 
         function getIcon(type) {
-            switch(type) {
+            switch(type) {  
                 case 'residential': return 'fa-house';
-                case 'commercial': return 'fa-store';
+                case 'public': return 'fa-building-columns';
                 case 'green': return 'fa-tree';
-                case 'industrial': return 'fa-building-columns';
+                case 'industrial': return 'fa-industry';
+                case 'none': return 'fa-ban';
                 default: return '';
             }
         }
@@ -239,9 +256,10 @@
             const activeBtn = document.getElementById(`btn-${type}`);
             const borderColors = {
                 'residential': 'border-amber-400 bg-amber-50 text-amber-900',
-                'commercial': 'border-orange-400 bg-orange-50 text-orange-900',
+                'public': 'border-blue-400 bg-blue-50 text-blue-900',
                 'green': 'border-emerald-400 bg-emerald-50 text-emerald-900',
-                'industrial': 'border-blue-400 bg-blue-50 text-blue-900'
+                'industrial': 'border-orange-400 bg-orange-50 text-orange-900',
+                'none': 'border-slate-400 bg-slate-50 text-slate-900'
             };
             activeBtn.className = `brush-btn flex items-center gap-2 p-2.5 rounded-xl border-2 ${borderColors[type]} font-medium text-xs transition`;
         }
@@ -251,92 +269,78 @@
             initGrid();
         }
 
-        function resetSimulation() {
-            gridData = [
-                0, 0, 1, 1, 2,
-                0, 2, 2, 1, 1,
-                3, 0, 0, 0, 2,
-                3, 3, 0, 0, 2,
-                0, 0, 1, 3, 2
-            ];
-            initGrid();
-        }
-
-        function applyPreset(preset) {
-            if (preset === 'restriction') {
-                // Convert many residential to industrial/commercial caps
-                for(let i=0; i<gridData.length; i++) {
-                    if(i % 2 === 0) gridData[i] = 3; 
-                }
-            } else if (preset === 'expansion') {
-                // Convert to residential and green spaces
-                for(let i=0; i<gridData.length; i++) {
-                    gridData[i] = (i % 3 === 0) ? 2 : 0;
-                }
-            }
-            initGrid();
-        }
-
         function updateStatistics() {
-            let counts = { residential: 0, commercial: 0, green: 0, industrial: 0 };
+            let counts = { residential: 0, public: 0, green: 0, industrial: 0, none:0};
             gridData.forEach(id => {
                 counts[idToType[id]]++;
             });
 
             document.getElementById('count-res').innerText = counts.residential;
-            document.getElementById('count-com').innerText = counts.commercial;
+            document.getElementById('count-pub').innerText = counts.public;
             document.getElementById('count-grn').innerText = counts.green;
             document.getElementById('count-ind').innerText = counts.industrial;
+            document.getElementById('count-none').innerText = counts.none;
 
-            // Economic modeling
+
+            // Baseline values corresponding to initial layout counts
             let baseRes = 10;
-            let baseAmenity = 10; // green + commercial
-    
+            let baseIndustrial = 5;
+            let basePublic = 5; // commercial (5) + green (5)
+            let baseGreen = 5;
+
+            let eq_baseQ = 200;
+            let eq_baseP = 150;
+
             let currentRes = counts.residential;
-            let currentAmenity = counts.green + counts.commercial;
+            let currentIndustrial = counts.industrial;
+            let currentPublic = counts.public;
+            let currentGreen = counts.green;
 
-            // Supply & Demand shifts
-            let supplyShift = (currentRes - baseRes) * 15; 
-            let demandShift = 0; // ceteris paribus
+            // 1. Supply increases when residential boxes increase
+            let supplyShift = (currentRes - baseRes) * 20;
 
-            let sStartX = 50 + supplyShift;
-            let sEndX =    350 + supplyShift;
-           // let sStartY = 200 + demandShift;
-           // let sEndY = 130 + demandShift;
+            // 2 & 3. Demand shifts based on industrial vs other boxes (commercial + green)
+            let demandShift = ((currentGreen - baseGreen) * 30) - ((currentIndustrial - baseIndustrial) * 10);
 
-            // Update SVG line elements
+            // Update Supply Curve (S)
             const sLine = document.getElementById('curve-supply');
-            
-            sLine.setAttribute('x1', sStartX);
-            sLine.setAttribute('x2', sEndX);
-           
-            let eqQ = 200
-            let eqP = 138
+            sLine.setAttribute('x1', 0 + supplyShift);
+            sLine.setAttribute('x2', 400 + supplyShift);
 
-            // Clamp values for clean visual display
-            eqQ = Math.max(10, Math.min(350, eqQ));
-            eqP = Math.max(10, Math.min(250, eqP));
-            
-            let slope = (225-50)/(350-50);
+            // Update Demand Curve (D)
+            const dLine = document.getElementById('curve-demand');
+            dLine.setAttribute('x1', 0 + demandShift);
+            dLine.setAttribute('x2', 400 + demandShift);
 
-            // Update Equilibrium Dot and Intercept Lines
-            const eqNew = document.getElementById('eq-new');
-            eqNew.setAttribute('cx', eqQ + supplyShift*0.513);
-            eqNew.setAttribute('cy', eqP + supplyShift*slope*0.513);
+            //recompute the equilibrium
+            //fix slope of demand and supply:
+            const slopeD = (300-0)/(400-0);
+            const slopeS = (0-300)/(400-0);
 
-            document.getElementById('line-p-new').setAttribute('x1', eqQ);
-            document.getElementById('line-p-new').setAttribute('x2', eqQ);
-            document.getElementById('line-p-new').setAttribute('y1', eqP);
-            document.getElementById('line-p-new').setAttribute('y2', eqP);
+            const newX =  eq_baseQ + (supplyShift*slopeD - demandShift*slopeS)/(slopeD-slopeS);
+            const newY =  eq_baseP + slopeS*(newX - eq_baseQ - supplyShift);
 
-            document.getElementById('line-q-new').setAttribute('x1', eqQ);
-            document.getElementById('line-q-new').setAttribute('x2', eqQ);
-            document.getElementById('line-q-new').setAttribute('y1', eqP);
-            document.getElementById('line-q-new').setAttribute('y2', eqP);
+            // Update Equil point (eq-new)
+            const eqPoint = document.getElementById('eq-new')
+            eqPoint.setAttribute('cx', newX)
+            eqPoint.setAttribute('cy', newY)
 
-            // Calculate Economic Prices ($P_1$ vs $P_2$) - Updated baseline to 100.0 and adjusted offset
+            const pLine = document.getElementById('line-p-new')
+            pLine.setAttribute('y1', newY)
+            pLine.setAttribute('y2', newY)
+            pLine.setAttribute('x1', 0)
+            pLine.setAttribute('x2', newX)
+                       
+            const qLine = document.getElementById('line-q-new')
+            qLine.setAttribute('y1', newY)
+            qLine.setAttribute('y2', 300)
+            qLine.setAttribute('x1', newX)
+            qLine.setAttribute('x2', newX)
+
+            // Calculate approximate new price and quantity changes
             let origPrice = 200.0;
-            let newPrice = 200 - supplyShift/15*10;
+            let priceImpact = (supplyShift / 20 * 10) - (demandShift * 0.5);
+            let newPrice =origPrice - priceImpact;
     
             let pctChange = (((newPrice - origPrice) / origPrice) * 100).toFixed(1);
             document.getElementById('val-p1').innerText = `$${origPrice.toFixed(1)}`;
@@ -348,25 +352,24 @@
             if (pctChange > 0) {
                 changeEl.innerText = `+${pctChange}%`;
                 changeEl.className = "text-lg font-bold text-red-600 mt-0.5";
-                badgeEl.innerText = "Giá tăng (Cung giảm)";
+                //badgeEl.innerText = "Price Increase (High Demand / Shortage)";
                 badgeEl.className = "text-xs bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold";
             } else if (pctChange < 0) {
                 changeEl.innerText = `${pctChange}%`;
                 changeEl.className = "text-lg font-bold text-emerald-600 mt-0.5";
-                badgeEl.innerText = "Giá giảm (Cung tăng)";
-                badgeEl.className = "text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold";
+                //badgeEl.innerText = "Price Decrease (Supply Expansion / Low Demand)";
+                //badgeEl.className = "text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold";
             } else {
                 changeEl.innerText = `0.0%`;
                 changeEl.className = "text-lg font-bold text-slate-700 mt-0.5";
-                badgeEl.innerText = "Không thay đổi";
+                //badgeEl.innerText = "Market Equilibrium Stable";
                 badgeEl.className = "text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-semibold";
-            }
+            } 
 
-            let qtyVal = 200 + supplyShift;
+            let qtyVal = 200 + supplyShift + demandShift * 0.5;
             document.getElementById('val-q').innerText = `${qtyVal} căn hộ`;
         }
 
-        // Initialize on load
         window.onload = function() {
             initGrid();
         };
