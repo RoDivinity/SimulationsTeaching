@@ -338,9 +338,8 @@
             qLine.setAttribute('x2', newX)
 
             // Calculate approximate new price and quantity changes
-            let origPrice = 200.0;
-            let priceImpact = (supplyShift / 20 * 10) - (demandShift * 0.5);
-            let newPrice =origPrice - priceImpact;
+            let origPrice = 150.0;
+            let newPrice = 150 - (newY-150);
     
             let pctChange = (((newPrice - origPrice) / origPrice) * 100).toFixed(1);
             document.getElementById('val-p1').innerText = `$${origPrice.toFixed(1)}`;
@@ -366,7 +365,7 @@
                 badgeEl.className = "text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-semibold";
             } 
 
-            let qtyVal = 200 + supplyShift + demandShift * 0.5;
+            let qtyVal = 500 + supplyShift + demandShift;
             document.getElementById('val-q').innerText = `${qtyVal} căn hộ`;
         }
 
